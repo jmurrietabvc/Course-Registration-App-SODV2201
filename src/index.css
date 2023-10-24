@@ -1,0 +1,23 @@
+h1 {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  /* Style for the course list */
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    border: 1px solid #ddd;
+    margin: 0.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+  }
+  
+  li:hover {
+    background-color: #e0e0e0;
+  }
