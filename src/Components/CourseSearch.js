@@ -20,7 +20,7 @@ export default function CourseSearch() {
 
   return (
     <div>
-      <h2>Course Search</h2>
+      <h3>Search for a Course</h3>
       <input
         type="text"
         placeholder="Search by name or code"
