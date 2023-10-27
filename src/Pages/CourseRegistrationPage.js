@@ -26,7 +26,7 @@ const CourseRegistrationPage = () => {
 
   return (
     <div>
-      <h2>Course Registration Page</h2>
+      <h1>Course Registration Page</h1>
       <p>Select a course to register:</p>
       <select value={selectedCourse} onChange={handleCourseSelection}>
         <option value="">Select a course</option>

@@ -26,6 +26,7 @@ const StudentLogin = ({ userCredentials }) => {
 
   return (
     <div>
+      <h3>Student Login</h3>
       <input
         type="text"
         placeholder="Username"

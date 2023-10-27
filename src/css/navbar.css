@@ -32,11 +32,13 @@ a {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  color: #fff;
+  color: #ffffff;
   font-weight: bold;
   text-decoration: none;
   text-align: center;
   justify-content: space-between;
+  align-items: center;
+  display: flex;
 }
 
 .admin-button:hover {

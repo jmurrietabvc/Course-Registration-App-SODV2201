@@ -24,7 +24,7 @@ const StudentDashboardPage = () => {
       {!loggedIn ? (
         // If not logged in, show the login form
         <div>
-          
+          <h1>Student Dashboard</h1>
           <StudentLogin />
           <form>
       
