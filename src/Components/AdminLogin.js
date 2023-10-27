@@ -1,4 +1,4 @@
-// AdminLoginPage.js Component
+// AdminLogin.js Component
 import React, { useState } from 'react';
 
 const AdminLogin = ({ onAdminLogin }) => {
