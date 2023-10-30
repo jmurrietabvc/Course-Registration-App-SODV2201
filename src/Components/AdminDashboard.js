@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import CourseSearch from './CourseSearch';
-import courses from '../data';
-
+import coursesData from '../data'; // Make sure you import coursesData
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [courseName, setCourseName] = useState('');
   const [courseCode, setCourseCode] = useState('');
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState(coursesData); // Initialize courses with your data
   const [searchQuery, setSearchQuery] = useState('');
   const [studentId, setStudentId] = useState('');
   const [studentProfile, setStudentProfile] = useState({});
@@ -14,108 +14,84 @@ const AdminDashboard = () => {
   const [editingCourseId, setEditingCourseId] = useState(null);
 
   const addCourse = () => {
-    // Placeholder: Simulate adding a new course (not connected to a real API or database)
-    // You can update the 'courses' state with the new course data
     const newCourse = {
       id: courses.length + 1,
-      courseName,
-      courseCode,
+      name: courseName, // Changed to 'name' to match your data
+      code: courseCode, // Changed to 'code' to match your data
     };
     setCourses([...courses, newCourse]);
-
-    // Reset input fields
     setCourseName('');
     setCourseCode('');
   };
 
   const searchCourses = () => {
-    // Placeholder: Simulate searching for courses based on course name or course code
-    // This example just filters the courses based on the searchQuery
-    const filteredCourses = courses.filter(
+    const filteredCourses = coursesData.filter(
       (course) =>
-        course.courseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.courseCode.toLowerCase().includes(searchQuery.toLowerCase())
+        course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        course.code.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setCourses(filteredCourses);
   };
 
   const deleteCourse = (courseId) => {
-    // Placeholder: Simulate deleting a course by ID
-    // You can update the 'courses' state by filtering out the course with the given ID
     const updatedCourses = courses.filter((course) => course.id !== courseId);
     setCourses(updatedCourses);
   };
 
   const editCourse = (courseId) => {
-    // Placeholder: Simulate editing a course by ID
-    // You can update the 'courses' state with the edited course data
-    // In this example, we set the course to edit based on the courseId
     const courseToEdit = courses.find((course) => course.id === courseId);
     if (courseToEdit) {
-      setCourseName(courseToEdit.courseName);
-      setCourseCode(courseToEdit.courseCode);
+      setCourseName(courseToEdit.name); // Use 'name' to match your data
+      setCourseCode(courseToEdit.code); // Use 'code' to match your data
       setEditingCourseId(courseId);
     }
   };
 
   const saveEditedCourse = () => {
-    // Placeholder: Save the edited course (not connected to a real API or database)
-    // Update the 'courses' state with the edited course data
     const updatedCourses = courses.map((course) => {
       if (course.id === editingCourseId) {
         return {
           ...course,
-          courseName,
-          courseCode,
+          name: courseName, // Use 'name' to match your data
+          code: courseCode, // Use 'code' to match your data
         };
       }
       return course;
     });
     setCourses(updatedCourses);
-
-    // Reset input fields and editingCourseId
     setCourseName('');
     setCourseCode('');
     setEditingCourseId(null);
   };
 
   const editStudentProfile = () => {
-    // Placeholder: Simulate editing a student profile (not connected to a real API or database)
-    // You can update the 'studentProfile' state with the edited profile data
+    // Placeholder: Simulate editing a student profile
     setEditingStudentProfile(false);
   };
 
   const addNewCourse = () => {
-    // Create a new course object
     const newCourse = {
-      id: courses.length + 1, // Assign a unique ID
-      courseName,
-      courseCode,
+      id: courses.length + 1,
+      name: courseName, // Use 'name' to match your data
+      code: courseCode, // Use 'code' to match your data
     };
-  
-    // Update the courses state
     setCourses([...courses, newCourse]);
-  
-    // Reset input fields
     setCourseName('');
     setCourseCode('');
   };
-  
 
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
-     
+    <div className="admin-dashboard-container">
+      <h2 className="admin-dashboard-title">Admin Dashboard</h2>
 
-  
-
-      <div>
-       
+      <div className="admin-dashboard-section">
         <h3>Edit Student Profile</h3>
         {editingStudentProfile ? (
           <div>
             {/* Input fields for editing student profile */}
-            <button onClick={editStudentProfile}>Save</button>
+            <button className="admin-dashboard-button" onClick={editStudentProfile}>
+              Save
+            </button>
           </div>
         ) : (
           <div>
@@ -125,32 +101,60 @@ const AdminDashboard = () => {
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
             />
-            <button onClick={() => setEditingStudentProfile(true)}>Edit Profile</button>
+            <button className="admin-dashboard-button" onClick={() => setEditingStudentProfile(true)}>
+              Edit Profile
+            </button>
           </div>
         )}
+      </div>
 
-    
-        </div>
-  <CourseSearch></CourseSearch>
-        <div>
-       <div>
-  <h3>Add New Course</h3>
-  <input
-    type="text"
-    placeholder="Course Name"
-    value={courseName}
-    onChange={(e) => setCourseName(e.target.value)}
-  />
-  <input
-    type="text"
-    placeholder="Course Code"
-    value={courseCode}
-    onChange={(e) => setCourseCode(e.target.value)}
-  />
-  <button onClick={addNewCourse}>Add Course</button>
-  </div>
+      <CourseSearch onSearch={searchCourses} />
+      
+      {/* Display the list of courses */}
+      <ul>
+        {courses.map((course) => (
+          <li key={course.id}>
+            <strong>{course.name}</strong> ({course.code}) - {course.description}
+            <button className="admin-dashboard-button" onClick={() => editCourse(course.id)}>
+              Edit
+            </button>
+            <button className="admin-dashboard-button" onClick={() => deleteCourse(course.id)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {/* Add New Course section */}
+      <div className="admin-dashboard-section">
+        <h3>Add New Course</h3>
+        <input
+          type="text"
+          placeholder="Course Name"
+          value={courseName}
+          onChange={(e) => setCourseName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Course Code"
+          value={courseCode}
+          onChange={(e) => setCourseCode(e.target.value)}
+        />
+     {editingCourseId !== null ? (
+  <button className="admin-dashboard-button" onClick={saveEditedCourse}>
+    Save Edited Course
+  </button>
+) : (
+  <button className="admin-dashboard-button" onClick={addNewCourse}>
+    Add Course
+  </button>
+)}
 
       </div>
+      
+      <Link to="/admin-login\">
+        <button className="admin-logout-btn">Logout</button>
+      </Link>
     </div>
   );
 };

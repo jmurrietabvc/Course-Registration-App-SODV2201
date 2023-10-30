@@ -1,4 +1,4 @@
-const courses = [
+const coursesData = [
   // Term 1 Courses
   {
     id: 1,
@@ -145,4 +145,4 @@ const courses = [
   // Add more courses as needed
 ];
 
-export default courses;
+export default coursesData;

@@ -1,5 +1,5 @@
 import React from "react";
-import courses from "../data"; // Updated import path
+import coursesData from "../data"; // Updated import path
 import CourseSearch from "./CourseSearch";
 
 function CourseList() {
@@ -8,7 +8,7 @@ function CourseList() {
       <h1>List of all Courses</h1>
       <CourseSearch />
       <ul className="course-list">
-        {courses.map((course) => (
+        {coursesData.map((course) => ( // Updated variable name to coursesData
           <li key={course.id} className="course-item">
             <strong>{course.name}</strong> ({course.code}) - {course.description}
           </li>
