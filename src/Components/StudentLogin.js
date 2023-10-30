@@ -1,47 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../css/StudentLogin.css"; // Import the CSS file
 
-const StudentLogin = ({ userCredentials }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const Studentlogin = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  // Add the following lines to retrieve and log student data from localStorage
+  const students = JSON.parse(localStorage.getItem("students")) || [];
+  console.log("Students data retrieved from localStorage:", students);
 
   const handleLogin = () => {
-    // Check if the user credentials are defined
-    if (userCredentials) {
-      const foundUser = userCredentials.find(
-        (user) => user.username === username && user.password === password
-      );
+    // Add the following lines to find and log the user during login
+    const user = students.find(
+      (student) =>
+        student.username === username && student.password === password
+    );
+    console.log("User found during login:", user);
 
-      if (foundUser) {
-        // Successfully logged in
-        alert('Login successful');
-      } else {
-        // Invalid credentials
-        alert('Invalid username or password');
-      }
+    if (user) {
+      // Successful login, pass the student data as props
+      navigate("/student/dashboard", { state: { student: user } });
     } else {
-      // Handle the case when userCredentials is undefined
-      alert('User credentials are not available');
+      setError("Invalid username or password. Please try again.");
     }
   };
 
   return (
-    <div>
-      <h3>Student Login</h3>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
+    <div className="student-login-container">
+      <h2>Student Portal</h2>
+      <form>
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button className="login-button" type="button" onClick={handleLogin}>
+          Log In
+        </button>
+      </form>
+      {error && <p className="error">{error}</p>}
+      <p>
+        Don't have an account?{" "}
+        <Link to="/student/registration" className="sign-up-link">
+          Sign Up
+        </Link>
+      </p>
     </div>
   );
 };
 
-export default StudentLogin;
+export default Studentlogin;

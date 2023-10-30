@@ -5,8 +5,7 @@ import CourseSearch from '../Components/CourseSearch';
 const CourseListPage = () => {
   return (
     <div>
-         <CourseSearch />
-      <CourseList />
+          <CourseList />
      
      
     </div>

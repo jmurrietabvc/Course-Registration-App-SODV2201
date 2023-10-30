@@ -1,151 +1,157 @@
-import React, { useState } from 'react';
-import '../css/StudentForm.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../css/StudentForm.css"; // Import the CSS file
 
-const generateRandomStudentID = () => {
-  // Generate a random 6-digit student ID
-  return Math.floor(100000 + Math.random() * 900000);
-};
+function Signup() {
+  const navigate = useNavigate();
 
-const StudentRegistrationForm = ({ onRegister }) => {
-  const [formData, setFormData] = useState({
-    studentID: generateRandomStudentID(),
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    dateOfBirth: '',
-    department: 'SD department',
-    program: '',
-    username: '',
-    password: '',
-  });
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dob, setDob] = useState("");
+  const [program, setProgram] = useState("Diploma");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleRegistration = () => {
-    // Implement registration logic here
-    // You can add validation and make API requests to register the student
+  const handleSignup = () => {
+    // Generate a unique ID for the student
+    const students = JSON.parse(localStorage.getItem("students")) || [];
+    const studentId = students.length + 1;
+    // In Signup.js
+localStorage.setItem("students", JSON.stringify(students));
+console.log("User data stored in localStorage:", students);
 
-    // Create a new student object based on the form data
-    const newStudent = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      dateOfBirth: formData.dateOfBirth,
-      department: formData.department,
-      program: formData.program,
-      username: formData.username,
-      password: formData.password,
-      // Generate a random 6-digit student ID
-      studentId: Math.floor(100000 + Math.random() * 900000),
+
+    // Create a student object
+    const student = {
+      id: studentId,
+      firstName,
+      lastName,
+      email,
+      phone,
+      dob,
+      department: "SD Department",
+      program,
+      username,
+      password,
     };
 
-    // Call the onRegister function and pass the new student object
-    onRegister(newStudent);
+    navigate("/student/login");
 
-    // Display an alert when registration is successful
-    alert('Registration successful');
+    // Store the student information in LocalStorage
+    students.push(student);
+    localStorage.setItem("students", JSON.stringify(students));
   };
 
   return (
-    <div className="registration-container">
-      <h2>Student Registration Page</h2>
+    <div className="form-container">
+      <h2>Signup</h2>
       <form>
         <div className="form-group">
-          <label>Student ID:</label>
-          <input
-            className="form-input"
-            type="text"
-            value={formData.studentID}
-            readOnly
-          />
-        </div>
-        <div className="form-group">
           <label>First Name:</label>
-          <input
-            className="form-input"
-            type="text"
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
         <div className="form-group">
           <label>Last Name:</label>
-          <input
-            className="form-input"
-            type="text"
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
         <div className="form-group">
           <label>Email:</label>
-          <input
-            className="form-input"
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
         <div className="form-group">
           <label>Phone:</label>
-          <input
-            className="form-input"
-            type="tel"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="tel"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
         <div className="form-group">
           <label>Date of Birth:</label>
-          <input
-            className="form-input"
-            type="date"
-            value={formData.dateOfBirth}
-            onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <label>Department:</label>
-          <input
-            className="form-input"
-            type="text"
-            value={formData.department}
-            onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="date"
+              placeholder="Date of Birth"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
         <div className="form-group">
           <label>Program:</label>
-          <input
-            className="form-input"
-            type="text"
-            value={formData.program}
-            onChange={(e) => setFormData({ ...formData, program: e.target.value })}
-          />
+          <div className="form-input-container">
+            <select
+              value={program}
+              onChange={(e) => setProgram(e.target.value)}
+              className="form-input"
+            >
+              <option value="Diploma">Diploma</option>
+              <option value="Post Diploma">Post Diploma</option>
+              <option value="Certificate">Certificate</option>
+            </select>
+          </div>
         </div>
         <div className="form-group">
           <label>Username:</label>
-          <input
-            className="form-input"
-            type="text"
-            value={formData.username}
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
         <div className="form-group">
           <label>Password:</label>
-          <input
-            className="form-input"
-            type="password"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          />
+          <div className="form-input-container">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+            />
+          </div>
         </div>
-        <button type="button" className="register-button" onClick={handleRegistration}>
-          Register
+        <button type="button" onClick={handleSignup} className="register-button">
+          Signup
         </button>
       </form>
     </div>
   );
-};
+}
 
-export default StudentRegistrationForm;
+export default Signup;

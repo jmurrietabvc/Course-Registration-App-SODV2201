@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import CourseSearch from './CourseSearch';
 
 const CourseRegistration = () => {
   const [selectedTerm, setSelectedTerm] = useState('Term1'); // Initialize with the first term
   const [selectedCourses, setSelectedCourses] = useState([]); // Store selected courses
 
-  const terms = ['Term1', 'Term2', 'Term3', 'Term4']; // Replace with your term data
+  const terms = ['Term 1', 'Term 2', 'Term 3', 'Term 4']; // Replace with your term data
 
   // Sample course data for each term (replace with your course data)
   const courseData = {
@@ -57,6 +58,7 @@ const CourseRegistration = () => {
           </option>
         ))}
       </select>
+      <CourseSearch/>
       <h3>Select Courses for {selectedTerm}</h3>
       <ul>
         {courseData[selectedTerm].map((course) => (
@@ -70,7 +72,7 @@ const CourseRegistration = () => {
           </li>
         ))}
       </ul>
-      <h3>Selected Courses</h3>
+      {/* <h3>Selected Courses</h3>
       <ul>
         {selectedCourses.map((course) => (
           <li key={course.id}>
@@ -78,8 +80,18 @@ const CourseRegistration = () => {
             <button onClick={() => handleCourseDeselect(course)}>Deselect</button>
           </li>
         ))}
+      </ul> */}
+      <h3>My Courses</h3>
+      <ul>
+        {selectedCourses.map((course) => (
+          <li key={course.id}>
+            {course.name} (Code: {course.code})
+           
+          </li>
+        ))}
       </ul>
     </div>
+    
   );
 };
 
