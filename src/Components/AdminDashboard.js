@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import AdminLogin from './AdminLogin';
-import coursesData from '../data';
-import { Link, useNavigate } from 'react-router-dom';
-import '../css/adminStyle.css'; 
+import React, { useState } from "react";
+import AdminLogin from "./AdminLogin";
+import coursesData from "../data";
+import { Link, useNavigate } from "react-router-dom";
+import "../css/adminStyle.css";
 
 const AdminDashboard = () => {
   const itemsPerPage = 5; // Number of courses per page
-  const [courseName, setCourseName] = useState('');
-  const [courseCode, setCourseCode] = useState('');
-  const [courseDescription, setCourseDescription] = useState('');
+  const [courseName, setCourseName] = useState("");
+  const [courseCode, setCourseCode] = useState("");
+  const [courseDescription, setCourseDescription] = useState("");
   const [courses, setCourses] = useState(coursesData);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddCourseFields, setShowAddCourseFields] = useState(false);
@@ -44,9 +44,9 @@ const AdminDashboard = () => {
       description: courseDescription,
     };
     setCourses([...courses, newCourse]);
-    setCourseName('');
-    setCourseCode('');
-    setCourseDescription('');
+    setCourseName("");
+    setCourseCode("");
+    setCourseDescription("");
   };
 
   const editCourse = (courseId) => {
@@ -73,23 +73,26 @@ const AdminDashboard = () => {
       return course;
     });
     setCourses(updatedCourses);
-    setCourseName('');
-    setCourseCode('');
-    setCourseDescription('');
+    setCourseName("");
+    setCourseCode("");
+    setCourseDescription("");
     setEditingCourseId(null);
   };
 
   const cancelEdit = () => {
-    setCourseName('');
-    setCourseCode('');
-    setCourseDescription('');
+    setCourseName("");
+    setCourseCode("");
+    setCourseDescription("");
     setEditingCourseId(null);
   };
 
   // Pagination
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
-  const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const currentCourses = filteredCourses.slice(
+    indexOfFirstCourse,
+    indexOfLastCourse
+  );
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -122,11 +125,18 @@ const AdminDashboard = () => {
             <ul>
               {currentCourses.map((course) => (
                 <li key={course.id}>
-                  <strong>{course.name}</strong> ({course.code}) - {course.description}
-                  <button className="admin-dashboard-button" onClick={() => editCourse(course.id)}>
+                  <strong>{course.name}</strong> ({course.code}) -{" "}
+                  {course.description}
+                  <button
+                    className="admin-dashboard-button"
+                    onClick={() => editCourse(course.id)}
+                  >
                     Edit
                   </button>
-                  <button className="admin-dashboard-button" onClick={() => deleteCourse(course.id)}>
+                  <button
+                    className="admin-dashboard-button"
+                    onClick={() => deleteCourse(course.id)}
+                  >
                     Delete
                   </button>
                 </li>
@@ -135,13 +145,19 @@ const AdminDashboard = () => {
             {/* Pagination */}
             <ul className="pagination">
               {filteredCourses.length > itemsPerPage &&
-                Array.from({ length: Math.ceil(filteredCourses.length / itemsPerPage) }, (_, index) => (
-                  <li key={index} className="page-item">
-                    <button className="page-link" onClick={() => paginate(index + 1)}>
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
+                Array.from(
+                  { length: Math.ceil(filteredCourses.length / itemsPerPage) },
+                  (_, index) => (
+                    <li key={index} className="page-item">
+                      <button
+                        className="page-link"
+                        onClick={() => paginate(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  )
+                )}
             </ul>
           </>
         ) : (
@@ -164,7 +180,10 @@ const AdminDashboard = () => {
               value={courseDescription}
               onChange={(e) => setCourseDescription(e.target.value)}
             />
-            <button className="admin-dashboard-button" onClick={saveEditedCourse}>
+            <button
+              className="admin-dashboard-button"
+              onClick={saveEditedCourse}
+            >
               Save Edited Course
             </button>
             <button className="admin-dashboard-button" onClick={cancelEdit}>
