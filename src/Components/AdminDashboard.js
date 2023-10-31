@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AdminLogin from './AdminLogin';
 import coursesData from '../data';
 import { Link, useNavigate } from 'react-router-dom';
-import '../css/adminStyle.css'; // Make sure to adjust the CSS import based on your file structure
+import '../css/adminStyle.css'; 
 
 const AdminDashboard = () => {
   const itemsPerPage = 5; // Number of courses per page
@@ -18,10 +18,12 @@ const AdminDashboard = () => {
 
    const navigate = useNavigate(); // Get the navigate function
 
-  const handleLogout = () => {
-    // Use the navigate function to go to the admin login page
-    navigate('/admin/login');
-  };
+  // const handleLogout = () => {
+  //   // Use the navigate function to go to the admin login page
+  //   navigate('/admin/login');
+  // };
+
+  const [filteredCourses, setFilteredCourses] = useState(coursesData);
 
   const searchCourses = () => {
     const filteredCourses = coursesData.filter(
@@ -30,9 +32,11 @@ const AdminDashboard = () => {
         course.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setCourses(filteredCourses);
+    setFilteredCourses(filteredCourses);
     setCurrentPage(1); // Reset to the first page when searching
   };
+
+  
 
   const deleteCourse = (courseId) => {
     const updatedCourses = courses.filter((course) => course.id !== courseId);
@@ -103,8 +107,8 @@ return (
     <h2 className="admin-dashboard-title">Admin Dashboard</h2>
 
     <div className="admin-dashboard-section">
-      <h3>Edit Student Profile</h3>
-      {/* ... (existing code) */}
+      {/* <h3>Edit Student Profile</h3> */}
+     
     </div>
 
     <div className="admin-dashboard-section">

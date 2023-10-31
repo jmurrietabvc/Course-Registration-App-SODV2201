@@ -9,7 +9,7 @@ import CourseListPage from './Pages/CourseListPage';
 import CourseRegistrationPage from './Pages/CourseRegistrationPage';
 import Navbar from './Components/Navbar';
 
-const AppRouter = () => {
+const App = () => {
   return (
     <Router>
       <Navbar /> 
@@ -26,4 +26,4 @@ const AppRouter = () => {
   );
 };
 
-export default AppRouter;
+export default App;
