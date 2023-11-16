@@ -4,10 +4,9 @@ import CourseSearch from '../Components/CourseSearch';
 
 const CourseListPage = () => {
   return (
-    <div>
-          <CourseList />
-     
-     
+    <div className="courselistpage">
+      <h2>Course List</h2>
+          <CourseList /> 
     </div>
   );
 }

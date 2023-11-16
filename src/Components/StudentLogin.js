@@ -29,8 +29,10 @@ const Studentlogin = () => {
   };
 
   return (
+    <>
+    <h2>Student Portal</h2>
     <div className="student-login-container">
-      <h2>Student Portal</h2>
+      <h2>Login</h2>
       <form>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
@@ -62,6 +64,7 @@ const Studentlogin = () => {
         </Link>
       </p>
     </div>
+    </>
   );
 };
 

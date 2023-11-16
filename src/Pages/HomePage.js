@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../css/homepage.css"; // Import the CSS file
 
 const HomePage = () => {
   return (
@@ -26,6 +27,7 @@ const HomePage = () => {
         <Link to="/student/login">
           <button className="homepage-button">Login as a Student</button>
         </Link>
+        &emsp;
         <Link to="/course/list">
           <button className="homepage-button">Check Available Courses</button>
         </Link>

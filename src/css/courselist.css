@@ -1,0 +1,32 @@
+p {
+    text-align: center;
+  }
+   
+  .homepage-buttons {
+    text-align: center;
+  }
+
+  h3{
+    text-align: center;
+  }
+
+   
+table {
+    width: 100%;
+    border-spacing: 5px;
+  }
+   
+  thead {
+    background-color: #213159;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+  }
+   
+  td {
+    background-color: #ececec;
+    padding: 10px 5px 10px 5px;
+    border-radius: 5px;
+    color: #213159;
+  }
+   

@@ -1,111 +1,104 @@
-/* Admin Login Styles */
+/* StudentLogin.css */
+
 .admin-login-container {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f8f8f8;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .admin-login-container h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #db0e0e;
-  }
-  
-  .admin-login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .admin-login-form label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .admin-login-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .admin-login-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .admin-login-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error {
-    color: #ff0000;
-    margin-top: 10px;
-    font-size: 14px;
-  }
-  
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f7f7f7;
+}
 
-  /* Admin Dashboard Styles */
-.admin-dashboard-container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f8f8f8;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .admin-dashboard-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #007bff;
-  }
-  
-  .admin-dashboard-section {
-    margin-top: 20px;
-  }
-  
-  .admin-dashboard-section h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .admin-dashboard-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .admin-dashboard-button:hover {
-    background-color: #0056b3;
-  }
+.form-group {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
 
-  .admin-logout-btn{
-    background-color: #e12814;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  .admin-logout-btn:hover {
-    background-color: #5e0303;
-  }
-  
+.form-group label {
+  width: 150px;
+  margin-right: 10px;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.login-button {
+  background-color: #007BFF;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: #ff0000;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.sign-up-link {
+  color: #007BFF; 
+  text-decoration: underline;
+  font-weight: bold; 
+ 
+}
+
+.sign-up-link:hover {
+  color: #0056b3;
+
+}
+/* Add the following CSS to your stylesheet */
+ 
+.addcourse {
+  text-align: center;
+}
+ 
+.editcourse {
+  text-align: center;
+}
+ 
+h3 {
+  font-size: large;
+}
+ 
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+ 
+.page-item {
+  margin: 0 5px; /* Adjust the margin as needed */
+}
+ 
+.page-link {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+ 
+.page-link:hover {
+  background-color: #ddd;
+}

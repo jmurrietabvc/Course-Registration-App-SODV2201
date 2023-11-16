@@ -100,36 +100,61 @@ const AdminDashboard = () => {
       <h2 className="admin-dashboard-title">Admin Dashboard</h2>
 
       <div className="admin-dashboard-section"></div>
-
+      <hr/>
       <div className="admin-dashboard-section">
-        <h3>Search Courses</h3>
+        <h3>
+          Search Courses &emsp;
         <input
           type="text"
           placeholder="Search by name, code, or description"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        &emsp;
         <button className="admin-dashboard-button" onClick={searchCourses}>
           Search
         </button>
+        </h3>
       </div>
+      <hr/>
 
       <div className="admin-dashboard-section">
-        {editingCourseId === null ? (
+
           <>
-            <ul>
-              {currentCourses.map((course) => (
-                <li key={course.id}>
-                  <strong>{course.name}</strong> ({course.code}) - {course.description}
-                  <button className="admin-dashboard-button" onClick={() => editCourse(course.id)}>
+          
+              <table>
+            <thead>
+
+              <td>Course Name</td>
+              <td>Course Code</td>
+              <td>Description</td>
+              <td colSpan={2}>Tools</td>
+            </thead>
+            {currentCourses.map((course) => (
+               <tr key={course.id}>
+                <td>{course.name}</td>
+                <td>{course.code}</td>
+                <td>{course.description}</td>
+                <td>
+                  <button
+                    className="admin-dashboard-button"
+                    onClick={() => editCourse(course.id)}
+                  >
                     Edit
                   </button>
-                  <button className="admin-dashboard-button" onClick={() => deleteCourse(course.id)}>
+                </td>
+                <td>
+                  <button
+                    className="admin-dashboard-button"
+                    onClick={() => deleteCourse(course.id)}
+                  >
                     Delete
                   </button>
-                </li>
-              ))}
-            </ul>
+                </td>
+              </tr>
+            ))}
+          </table>
+
             {/* Pagination */}
             <ul className="pagination">
               {filteredCourses.length > itemsPerPage &&
@@ -142,73 +167,89 @@ const AdminDashboard = () => {
                 ))}
             </ul>
           </>
-        ) : (
+
           <>
+          <div className="editcourse">
             <h3>Edit Course</h3>
+            Course Name:
             <input
               type="text"
               placeholder="Course Name"
               value={courseName}
               onChange={(e) => setCourseName(e.target.value)}
             />
+            &emsp; Course Code:
             <input
               type="text"
               placeholder="Course Code"
               value={courseCode}
               onChange={(e) => setCourseCode(e.target.value)}
             />
+            &emsp; Description:
             <textarea
               placeholder="Course Description"
               value={courseDescription}
               onChange={(e) => setCourseDescription(e.target.value)}
             />
+            &emsp;
             <button className="admin-dashboard-button" onClick={saveEditedCourse}>
               Save Edited Course
             </button>
+            &emsp;
             <button className="admin-dashboard-button" onClick={cancelEdit}>
               Cancel
             </button>
+            </div>
           </>
-        )}
       </div>
-
+      <hr />
       <div className="admin-dashboard-section">
-        <h3>Add New Course</h3>
+        <h3>
+          Add New Course
+          <br />
+          <br />
         <button
           className="admin-dashboard-button"
           onClick={() => setShowAddCourseFields(!showAddCourseFields)}
-        >
+          >
           Add New Course
         </button>
+          </h3>
         {showAddCourseFields && (
-          <div>
+          <div className="addcourse">
+          Course Name:
             <input
               type="text"
               placeholder="Course Name"
               value={courseName}
               onChange={(e) => setCourseName(e.target.value)}
             />
+            &emsp; Course Code:
             <input
               type="text"
               placeholder="Course Code"
               value={courseCode}
               onChange={(e) => setCourseCode(e.target.value)}
             />
+            &emsp; Description:
             <textarea
               placeholder="Course Description"
               value={courseDescription}
               onChange={(e) => setCourseDescription(e.target.value)}
             />
+            &emsp;
             <button className="admin-dashboard-button" onClick={addNewCourse}>
               Add Course
             </button>
           </div>
         )}
       </div>
-
+      <hr />
+      <h3>
       <Link to="/">
         <button className="admin-logout-btn">Logout</button>
       </Link>
+      </h3>
     </div>
   );
 };

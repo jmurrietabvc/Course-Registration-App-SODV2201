@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import CourseRegistration from "./CourseRegistration";
 import SelectedCourses from "./SelectedCourses";
 import { Link, useNavigate } from "react-router-dom";
+import "../css/StudentForm.css";
 
 export const Studentdashboard = () => {
   const location = useLocation();
@@ -20,10 +21,12 @@ export const Studentdashboard = () => {
 
       <div className="profile">
         <h2>Student Profile</h2>
-        <p>Name: {student.firstName}</p>
-        <p>ID: {student.id}</p>
-        <p>Department: {student.department}</p>
-        <p>Program: {student.program}</p>
+        <h4>
+        Name: {student.firstName} &emsp;
+        ID: {student.id} &emsp;
+        Department: {student.department} &emsp;
+        Program: {student.program} &emsp;
+        </h4>
         <div className="selected-courses">
           <SelectedCourses selectedCourses={selectedCourses} />
         </div>

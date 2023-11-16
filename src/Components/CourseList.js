@@ -1,20 +1,38 @@
 import React from "react";
 import coursesData from "../data"; // Updated import path
 import CourseSearch from "./CourseSearch";
+import "../css/courselist.css";
+
+
 
 function CourseList() {
   return (
-    <div>
-      <h1>List of all Courses</h1>
-      <CourseSearch />
-      <ul className="course-list">
-        {coursesData.map((course) => ( // Updated variable name to coursesData
-          <li key={course.id} className="course-item">
-            <strong>{course.name}</strong> ({course.code}) - {course.description}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <div class="courselisttable">
+
+        <CourseSearch />
+        <table>
+          <thead>
+            {/* <td>Course ID</td> */}
+            <td>Course Name</td>
+            <td>Course Code</td>
+            <td>Description</td>
+          </thead>
+          {coursesData.map(
+            (
+              course // Updated variable name to coursesData
+            ) => (
+              <tr key={course.id}>
+                {/* <td>{course.id}</td> */}
+                <td>{course.name}</td>
+                <td>{course.code}</td>
+                <td>{course.description}</td>
+              </tr>
+            )
+          )}
+        </table>
+      </div>
+    </>
   );
 }
 

@@ -45,6 +45,8 @@ console.log("User data stored in localStorage:", students);
   };
 
   return (
+    <>
+    <h2> Registration</h2>
     <div className="form-container">
       <h2>Signup</h2>
       <form>
@@ -151,6 +153,7 @@ console.log("User data stored in localStorage:", students);
         </button>
       </form>
     </div>
+    </>
   );
 }
 

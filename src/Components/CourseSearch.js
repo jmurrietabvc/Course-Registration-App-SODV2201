@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import courses from "../data";
+import "../css/courselist.css";
+
 
 export default function CourseSearch() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,17 +22,22 @@ export default function CourseSearch() {
 
   return (
     <div>
-      <h3>Search for a Course</h3>
+      <hr/>
+      <h3>Search for a Course &emsp;
       <input
         type="text"
         placeholder="Search by name or code"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      &emsp;
       <button onClick={handleSearch}>Search</button>
+      </h3>
+      <hr/>
       <ul>
         {searchResults.map((course) => (
           <li key={course.id}>
+            <h3>Search Result</h3>
             {course.name} ({course.code}) - {course.description}
           </li>
         ))}

@@ -13,7 +13,6 @@ const AdminLoginPage = () => {
 
   return (
     <div>
-      <h1>Admin Login Page</h1>
       {!isAdminLoggedIn ? (
         <AdminLogin onAdminLogin={handleAdminLogin} />
       ) : (

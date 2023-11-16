@@ -19,27 +19,32 @@ const AdminLogin = ({ onAdminLogin }) => {
   };
 
   return (
+    <>
+    <h2>Admin Login</h2>
     <div className="admin-login-container">
-      <h3>Admin Login</h3>
-      <div className="admin-login-form">
+      <h2>Login</h2>
+      <div className="form-group">
         <label>Username:</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+        </div>
+        <div className="form-group">
         <label>Password:</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="admin-login-button" onClick={handleLogin}>
+      </div>
+        <button className="login-button" type="button" onClick={handleLogin}>
           Login
         </button>
         {error && <p className="error">{error}</p>}
-      </div>
     </div>
+    </>
   );
 };
 
