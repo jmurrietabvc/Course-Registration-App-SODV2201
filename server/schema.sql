@@ -58,6 +58,19 @@ CREATE TABLE courses (
     prerequisites VARCHAR(255)
 
 );
+
+CREATE TABLE students (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    dob DATE NOT NULL,
+    department VARCHAR(50) NOT NULL,
+    program VARCHAR(50) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(50) NOT NULL
+);
  
 INSERT INTO users (email, first_name, last_name, password, admin) 
 
