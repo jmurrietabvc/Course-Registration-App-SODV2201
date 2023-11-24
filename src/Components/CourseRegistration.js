@@ -127,7 +127,7 @@ const CourseRegistration = ({ programType }) => {
         ))}
       </ul>
       {/* <h3>Selected Courses</h3>
-      <ul>
+      <ul>  
         {selectedCourses.map((course) => (
           <li key={course.id}>
             {course.name} (Code: {course.code})
