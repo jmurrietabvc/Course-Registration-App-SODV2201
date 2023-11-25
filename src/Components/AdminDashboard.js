@@ -90,20 +90,22 @@ const AdminDashboard = () => {
   const saveEditedCourse = async () => {
     try {
       console.log('Request payload:', {
-        course_name: courseName,
-        course_code: courseCode,
-        course_description: courseDescription,
-        course_fees: courseFees, // Added course fees
+        courseId: editingCourseId,
+        courseCode: courseCode,
+        courseName: courseName,
+        courseDescription: courseDescription,
+        courseFees: courseFees,
       });
-
+  
       await axios.put(`http://localhost:5544/courses/${editingCourseId}`, {
-        course_name: courseName,
-        course_code: courseCode,
-        course_description: courseDescription,
-        course_fees: courseFees, // Added course fees
+        courseId: editingCourseId,
+        courseCode: courseCode,
+        courseName: courseName,
+        courseDescription: courseDescription,
+        courseFees: courseFees,
       });
-
-      fetchCourses(); // Refresh the course list after edit
+  
+      fetchCourses();
       setCourseName('');
       setCourseCode('');
       setCourseDescription('');
@@ -113,6 +115,7 @@ const AdminDashboard = () => {
       console.error('Error saving edited course:', error);
     }
   };
+  
 
   const cancelEdit = () => {
     setCourseName('');
@@ -138,7 +141,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard-container">
       <h2 className="admin-dashboard-title">Admin Dashboard</h2>
-
+  
       <div className="admin-dashboard-section">
         <h3>
           Search Courses &emsp;
@@ -154,52 +157,53 @@ const AdminDashboard = () => {
           </button>
         </h3>
       </div>
-
+  
       <div className="admin-dashboard-section">
         <table>
-          <thead>
-            <tr>
-              <td>Course Name</td>
-              <td>Course Code</td>
-              <td>Description</td>
-              <td>Course Fees</td> {/* Added Course Fees */}
-              <td colSpan={2}>Tools</td>
-            </tr>
-          </thead>
-          <tbody>
-            {currentCourses.map((course) => (
-              <tr key={course.course_id}>
-                <td>{course.course_name}</td>
-                <td>{course.course_code}</td>
-                <td>{course.course_description}</td>
-                <td>{course.course_fees}</td> {/* Display Course Fees */}
-                <td>
-                  <button className="admin-dashboard-button" onClick={() => editCourse(course.course_id)}>
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button className="admin-dashboard-button" onClick={() => deleteCourse(course.course_id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+        <thead>
+  <tr>
+    <td>Course Name</td>
+    <td>Course Code</td>
+    <td>Description</td>
+    <td>Course Fees</td>
+    <td colSpan={2}>Tools</td>
+  </tr>
+</thead>
+<tbody>
+  {currentCourses.map((course) => (
+    <tr key={course.course_id}>
+      <td>{course.course_name}</td>
+      <td>{course.course_code}</td>
+      <td>{course.course_description}</td>
+      <td>{course.course_fees}</td> {/* Display Course Fees */}
+      <td>
+        <button className="admin-dashboard-button" onClick={() => editCourse(course.course_id)}>
+          Edit
+        </button>
+      </td>
+      <td>
+        <button className="admin-dashboard-button" onClick={() => deleteCourse(course.course_id)}>
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
 
         {/* Pagination */}
-        <ul className="pagination">
-          {courses.length > itemsPerPage &&
-            Array.from({ length: Math.ceil(courses.length / itemsPerPage) }, (_, index) => (
-              <li key={index} className="page-item">
-                <button className="page-link" onClick={() => paginate(index + 1)}>
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-        </ul>
-      </div>
+      <ul className="pagination">
+        {courses.length > itemsPerPage &&
+          Array.from({ length: Math.ceil(courses.length / itemsPerPage) }, (_, index) => (
+            <li key={index} className="page-item">
+              <button className="page-link" onClick={() => paginate(index + 1)}>
+                {index + 1}
+              </button>
+            </li>
+          ))}
+      </ul>
+    </div>
 
       {editingCourseId && (
         <div className="editcourse">

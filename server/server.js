@@ -4,10 +4,20 @@ const port = 5544;
 const cors = require("cors");
 const sql = require('mssql');
 
-const { connectToDatabase, showPrograms, getCoursesFromDatabase, addCourse, updateCourse, deleteCourse, getPool } = require("./database");
+const {
+  connectToDatabase,
+  showPrograms,
+  getCoursesFromDatabase,
+  addCourse,
+  updateCourse,
+  deleteCourse,
+  getPool
+} = require("./database");
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+  extended: true
+}));
 
 app.use(
   cors({
@@ -31,33 +41,23 @@ app.get('/courses', async (req, res) => {
     res.json(courses);
   } catch (error) {
     console.error('Error getting courses:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// Endpoint to add a new course
-app.post('/courses', async (req, res) => {
-  const { courseCode, courseName, courseDescription, courseFees } = req.body;
-
-  try {
-    await addCourse({
-      courseCode,
-      courseName,
-      courseDescription,
-      courseFees,
+    res.status(500).json({
+      error: 'Internal Server Error'
     });
-
-    res.status(201).json({ message: "Course added successfully" });
-  } catch (error) {
-    console.error('Error adding course:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 // Endpoint to update a course
 app.put('/courses/:id', async (req, res) => {
   const courseId = req.params.id;
-  const { courseCode, courseName, courseDescription, courseFees } = req.body;
+  const {
+    courseCode,
+    courseName,
+    courseDescription,
+    courseFees
+  } = req.body;
 
   try {
     console.log('Received update request for course ID:', courseId);
@@ -70,10 +70,42 @@ app.put('/courses/:id', async (req, res) => {
       courseFees,
     });
 
-    res.json({ message: "Course updated successfully" });
+    res.json({
+      message: "Course updated successfully"
+    });
   } catch (error) {
     console.error('Error updating course:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({
+      error: 'Internal Server Error'
+    });
+  }
+});
+
+// Endpoint to add a new course
+app.post('/courses', async (req, res) => {
+  const {
+    courseCode,
+    courseName,
+    courseDescription,
+    courseFees
+  } = req.body;
+
+  try {
+    await addCourse({
+      courseCode,
+      courseName,
+      courseDescription,
+      courseFees,
+    });
+
+    res.status(201).json({
+      message: "Course added successfully"
+    });
+  } catch (error) {
+    console.error('Error adding course:', error);
+    res.status(500).json({
+      error: 'Internal Server Error'
+    });
   }
 });
 
@@ -84,13 +116,90 @@ app.delete('/courses/:id', async (req, res) => {
   try {
     await deleteCourse(courseId);
 
-    res.json({ message: "Course deleted successfully" });
+    res.json({
+      message: "Course deleted successfully"
+    });
   } catch (error) {
     console.error('Error deleting course:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({
+      error: 'Internal Server Error'
+    });
   }
 });
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
+});
+
+
+//Student
+//route to register a student
+app.post("/register", async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    dob,
+    program,
+    username,
+    password,
+  } = req.body;
+  try {
+    // Call a function to register the student in the database
+    await registerStudent({
+      firstName,
+      lastName,
+      email,
+      phone,
+      dob,
+      program,
+      username,
+      password,
+    });
+    res.status(201).json({
+      message: "Registration successful"
+    });
+  } catch (error) {
+    console.error("Error registering student:", error);
+    res.status(500).json({
+      message: "Internal server error"
+    });
+  }
+});
+//route to login a student
+app.post("/login", async (req, res) => {
+  const {
+    username,
+    password
+  } = req.body;
+  try {
+    // Query the database to find the user with the provided username and password
+    const result = await pool
+      .request()
+      .input("username", sql.NVarChar, username)
+      .input("password", sql.NVarChar, password)
+      .query(
+        "SELECT * FROM students WHERE username = @username AND password = @password"
+      );
+    if (result.recordset.length > 0) {
+      // Authentication successful
+      const student = result.recordset[0];
+      res.json({
+        success: true,
+        student
+      });
+    } else {
+      // Authentication failed
+      res.json({
+        success: false
+      });
+    }
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
 });
