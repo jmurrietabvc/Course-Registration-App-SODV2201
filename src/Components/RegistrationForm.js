@@ -20,8 +20,8 @@ function Signup() {
       // Create a student object
       const student = {
         //id: studentId,
-        firstName,
-        lastName,
+        student_firstName: firstName, // Corrected field name
+        student_lastName: lastName,   // Corrected field name
         email,
         phone,
         dob,
@@ -30,16 +30,17 @@ function Signup() {
         username,
         password,
       };
-
+  
       // Make an HTTP POST request to the server to register the student
       await axios.post("http://localhost:5544/register", student);
-
+  
       navigate("/student/login");
     } catch (error) {
       console.error("Error registering student:", error);
       // Handle error appropriately (e.g., display an error message to the user)
     }
   };
+  
 
   return (
     <>

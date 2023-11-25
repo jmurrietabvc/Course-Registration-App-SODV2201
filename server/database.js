@@ -17,7 +17,7 @@ const pool = new sql.ConnectionPool(config);
 
 module.exports = {
   // Function to connect to the database
-  async connectToDatabase() {
+  connectToDatabase: async function() {
     try {
       await pool.connect();
       console.log("Connected to the database");
@@ -26,7 +26,7 @@ module.exports = {
     }
   },
   // Function to show programs table
-  async showPrograms() {
+  showPrograms: async function() {
     try {
       const result = await pool.request().query("SELECT * FROM programs");
       console.log(result.recordset);
@@ -36,7 +36,7 @@ module.exports = {
     }
   },
   // Function to show courses table
-  async showCourses() {
+  showCourses: async function() {
     try {
       const result = await pool.request().query("SELECT * FROM courses");
       console.log(result.recordset);
@@ -46,7 +46,7 @@ module.exports = {
     }
   },
   // Function to register a student in the database
-  async registerStudent(student) {
+  registerStudent: async function(student) {
     try {
       const result = await pool
         .request()
@@ -68,6 +68,22 @@ module.exports = {
     } catch (err) {
       console.error("Error registering student:", err);
       throw err;
+    }
+  },
+
+  getCoursesFromDatabase: async function() {
+    try {
+      await pool.connect();
+
+      const result = await pool.request().query("SELECT * FROM courses");
+
+      return result.recordset;
+    } catch (error) {
+      console.error('Error fetching courses from MSSQL database:', error);
+      throw error;
+    } finally {
+      // Be sure to close the connection when you're done with it
+      await pool.close();
     }
   },
 
