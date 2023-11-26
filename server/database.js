@@ -93,41 +93,43 @@ updateCourse: async function (courseId, course) {
 },
 
 
-  // Function to delete a course
-  deleteCourse: async function (courseId) {
-    try {
-      const result = await pool
-        .request()
-        .input("courseId", sql.Int, courseId)
-        .query("DELETE FROM courses WHERE course_id = @courseId");
+// Function to add a new course
+addCourse: async function (course) {
+  try {
+    // Use the nextCourseId when inserting the new course
+    const result = await pool
+      .request()
+      .input("courseCode", sql.VarChar(100), course.courseCode)
+      .input("courseName", sql.VarChar(100), course.courseName)
+      .input("courseDescription", sql.VarChar(5000), course.courseDescription)
+      .input("courseFees", sql.Money, course.courseFees)
+      .query(`
+        INSERT INTO courses (course_code, course_name, course_description, course_fees)
+        VALUES (@courseCode, @courseName, @courseDescription, @courseFees)
+      `);
 
-      console.log("Course deleted successfully:", result);
-    } catch (err) {
-      console.error("Error deleting course:", err);
-      throw err;
-    }
-  },
+    console.log("Course added successfully:", result);
+  } catch (err) {
+    console.error("Error adding course:", err);
+    throw err;
+  }
+},
 
-   // Function to add a new course
-   addCourse: async function (course) {
-    try {
-      const result = await pool
-        .request()
-        .input("courseCode", sql.VarChar(100), course.courseCode)
-        .input("courseName", sql.VarChar(100), course.courseName)
-        .input("courseDescription", sql.VarChar(5000), course.courseDescription)
-        .input("courseFees", sql.Money, course.courseFees)
-        .query(`
-          INSERT INTO courses (course_code, course_name, course_description, course_fees)
-          VALUES (@courseCode, @courseName, @courseDescription, @courseFees)
-        `);
 
-      console.log("Course added successfully:", result);
-    } catch (err) {
-      console.error("Error adding course:", err);
-      throw err;
-    }
-  },
+    // Function to delete a course
+    deleteCourse: async function (courseId) {
+      try {
+        const result = await pool
+          .request()
+          .input("courseId", sql.Int, courseId)
+          .query("DELETE FROM courses WHERE course_id = @courseId");
+  
+        console.log("Course deleted successfully:", result);
+      } catch (err) {
+        console.error("Error deleting course:", err);
+        throw err;
+      }
+    },
 
 // Function to register a student in the database
 async registerStudent(student) {

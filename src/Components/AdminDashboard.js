@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   const [showAddCourseFields, setShowAddCourseFields] = useState(false);
   const [filteredCourses, setFilteredCourses] = useState([]);
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const fetchCourses = async () => {
     try {
@@ -28,26 +28,26 @@ const AdminDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCourses();
-  }, []); // Empty dependency array ensures the effect runs only once, similar to componentDidMount
+useEffect(() => {
+  fetchCourses();
+}, [searchQuery]); // Now the effect will run whenever searchQuery changes
 
-  const searchCourses = () => {
-    const query = searchQuery.toLowerCase();
-    const filtered = courses.filter((course) => {
-      const name = course.course_name ? course.course_name.toLowerCase() : '';
-      const code = course.course_code ? course.course_code.toLowerCase() : '';
-      const description = course.course_description ? course.course_description.toLowerCase() : '';
+const searchCourses = () => {
+  // Filter the courses based on the search query
+  const query = searchQuery.toLowerCase();
+  const filtered = courses.filter((course) => {
+    const name = course.course_name ? course.course_name.toLowerCase() : '';
+    const code = course.course_code ? course.course_code.toLowerCase() : '';
+    const description = course.course_description ? course.course_description.toLowerCase() : '';
 
-      return (
-        name.includes(query) ||
-        code.includes(query) ||
-        description.includes(query)
-      );
-    });
-    setFilteredCourses(filtered);
-    setCurrentPage(1);
-  };
+    return name.includes(query) || code.includes(query) || description.includes(query);
+  });
+
+  // Set the filtered courses and reset the current page to the first page
+  setFilteredCourses(filtered);
+  setCurrentPage(1);
+};
+
 
   const deleteCourse = async (courseId) => {
     try {
@@ -61,10 +61,10 @@ const AdminDashboard = () => {
   const addNewCourse = async () => {
     try {
       await axios.post('http://localhost:5544/courses', {
-        course_name: courseName,
-        course_code: courseCode,
-        course_description: courseDescription,
-        course_fees: courseFees, // Added course fees
+        courseCode: courseCode, // Make sure the keys match the expected parameter names
+        courseName: courseName,
+        courseDescription: courseDescription,
+        courseFees: courseFees,
       });
       fetchCourses(); // Refresh the course list after addition
       setCourseName('');
@@ -75,6 +75,7 @@ const AdminDashboard = () => {
       console.error('Error adding new course:', error);
     }
   };
+  
 
   const editCourse = (courseId) => {
     const courseToEdit = courses.find((course) => course.course_id === courseId);
@@ -146,13 +147,14 @@ const AdminDashboard = () => {
         <h3>
           Search Courses &emsp;
           <input
-            type="text"
-            placeholder="Search by name, code, or description"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          &emsp;
-          <button className="admin-dashboard-button" onClick={searchCourses}>
+  type="text"
+  placeholder="Search by Name, Code, or Description"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+/>
+
+         
+         <button className="admin-dashboard-button" onClick={searchCourses}>
             Search
           </button>
         </h3>

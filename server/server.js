@@ -37,7 +37,23 @@ app.get("/programs", async (req, res) => {
 // Endpoint to get all courses
 app.get('/courses', async (req, res) => {
   try {
-    const courses = await getCoursesFromDatabase();
+    const { search } = req.query;
+
+    // Fetch all courses from the database
+    let courses = await getCoursesFromDatabase();
+
+    // If a search query is provided, filter the courses
+    if (search) {
+      const query = search.toLowerCase();
+      courses = courses.filter((course) => {
+        const name = course.course_name ? course.course_name.toLowerCase() : '';
+        const code = course.course_code ? course.course_code.toLowerCase() : '';
+        const description = course.course_description ? course.course_description.toLowerCase() : '';
+
+        return name.includes(query) || code.includes(query) || description.includes(query);
+      });
+    }
+
     res.json(courses);
   } catch (error) {
     console.error('Error getting courses:', error);
@@ -46,6 +62,7 @@ app.get('/courses', async (req, res) => {
     });
   }
 });
+
 
 
 
