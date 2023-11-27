@@ -60,6 +60,23 @@ module.exports = {
     }
   },
 
+  // Function to get program by name
+  getProgramByName: async function (programName) {
+    try {
+      const result = await pool
+        .request()
+        .input("programName", sql.NVarChar, programName)
+        .query("SELECT * FROM program WHERE program_name = @programName");
+
+      if (result.rowsAffected[0] === 1) {
+        console.log("Program retrieved successfully:", result);
+        return result.recordset;
+      }
+    } catch (err) {
+      console.error("Error retrieving program:", err);
+    }
+  },
+
   // Function to show courses table
   showCourses: async function () {
     try {

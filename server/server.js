@@ -2,23 +2,26 @@ const express = require("express");
 const app = express();
 const port = 5544;
 const cors = require("cors");
-const sql = require('mssql');
+const sql = require("mssql");
 
 const {
   connectToDatabase,
   loginStudent,
   showPrograms,
+  getProgramByName,
   getCoursesFromDatabase,
   addCourse,
   updateCourse,
   deleteCourse,
-  getPool
+  getPool,
 } = require("./database");
 
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 app.use(
   cors({
@@ -35,8 +38,22 @@ app.get("/programs", async (req, res) => {
   res.json(programs);
 });
 
+app.get("/program/:name", async (req, res) => {
+  const programName = req.params.name;
+  const program = await getProgramByName(programName);
+
+  if (program ?? false) {
+    res.json({
+      success: true,
+      program,
+    });
+  } else {
+    res.status(400).send("success: false");
+  }
+});
+
 // Endpoint to get all courses
-app.get('/courses', async (req, res) => {
+app.get("/courses", async (req, res) => {
   try {
     const { search } = req.query;
 
@@ -47,39 +64,37 @@ app.get('/courses', async (req, res) => {
     if (search) {
       const query = search.toLowerCase();
       courses = courses.filter((course) => {
-        const name = course.course_name ? course.course_name.toLowerCase() : '';
-        const code = course.course_code ? course.course_code.toLowerCase() : '';
-        const description = course.course_description ? course.course_description.toLowerCase() : '';
+        const name = course.course_name ? course.course_name.toLowerCase() : "";
+        const code = course.course_code ? course.course_code.toLowerCase() : "";
+        const description = course.course_description
+          ? course.course_description.toLowerCase()
+          : "";
 
-        return name.includes(query) || code.includes(query) || description.includes(query);
+        return (
+          name.includes(query) ||
+          code.includes(query) ||
+          description.includes(query)
+        );
       });
     }
 
     res.json(courses);
   } catch (error) {
-    console.error('Error getting courses:', error);
+    console.error("Error getting courses:", error);
     res.status(500).json({
-      error: 'Internal Server Error'
+      error: "Internal Server Error",
     });
   }
 });
 
-
-
-
 // Endpoint to update a course
-app.put('/courses/:id', async (req, res) => {
+app.put("/courses/:id", async (req, res) => {
   const courseId = req.params.id;
-  const {
-    courseCode,
-    courseName,
-    courseDescription,
-    courseFees
-  } = req.body;
+  const { courseCode, courseName, courseDescription, courseFees } = req.body;
 
   try {
-    console.log('Received update request for course ID:', courseId);
-    console.log('Request payload:', req.body);
+    console.log("Received update request for course ID:", courseId);
+    console.log("Request payload:", req.body);
 
     await updateCourse(courseId, {
       courseCode,
@@ -89,24 +104,19 @@ app.put('/courses/:id', async (req, res) => {
     });
 
     res.json({
-      message: "Course updated successfully"
+      message: "Course updated successfully",
     });
   } catch (error) {
-    console.error('Error updating course:', error);
+    console.error("Error updating course:", error);
     res.status(500).json({
-      error: 'Internal Server Error'
+      error: "Internal Server Error",
     });
   }
 });
 
 // Endpoint to add a new course
-app.post('/courses', async (req, res) => {
-  const {
-    courseCode,
-    courseName,
-    courseDescription,
-    courseFees
-  } = req.body;
+app.post("/courses", async (req, res) => {
+  const { courseCode, courseName, courseDescription, courseFees } = req.body;
 
   try {
     await addCourse({
@@ -117,30 +127,30 @@ app.post('/courses', async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Course added successfully"
+      message: "Course added successfully",
     });
   } catch (error) {
-    console.error('Error adding course:', error);
+    console.error("Error adding course:", error);
     res.status(500).json({
-      error: 'Internal Server Error'
+      error: "Internal Server Error",
     });
   }
 });
 
 // Endpoint to delete a course
-app.delete('/courses/:id', async (req, res) => {
+app.delete("/courses/:id", async (req, res) => {
   const courseId = req.params.id;
 
   try {
     await deleteCourse(courseId);
 
     res.json({
-      message: "Course deleted successfully"
+      message: "Course deleted successfully",
     });
   } catch (error) {
-    console.error('Error deleting course:', error);
+    console.error("Error deleting course:", error);
     res.status(500).json({
-      error: 'Internal Server Error'
+      error: "Internal Server Error",
     });
   }
 });
@@ -148,7 +158,6 @@ app.delete('/courses/:id', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-
 
 //Student
 //route to register a student
@@ -176,12 +185,12 @@ app.post("/register", async (req, res) => {
       password,
     });
     res.status(201).json({
-      message: "Registration successful"
+      message: "Registration successful",
     });
   } catch (error) {
     console.error("Error registering student:", error);
     res.status(500).json({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -222,16 +231,15 @@ app.post("/register", async (req, res) => {
 //   }
 // });
 app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
-    const user = await loginStudent(username, password);
-  
-    if (user ?? false) {
-      res.json({
-        success: true,
-        user,
-      });
-    } else {
-        res.status(400).send("success: false" );
-    }
-  });
+  const { username, password } = req.body;
+  const user = await loginStudent(username, password);
 
+  if (user ?? false) {
+    res.json({
+      success: true,
+      user,
+    });
+  } else {
+    res.status(400).send("success: false");
+  }
+});
