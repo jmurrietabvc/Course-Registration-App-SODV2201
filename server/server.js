@@ -6,6 +6,7 @@ const sql = require('mssql');
 
 const {
   connectToDatabase,
+  loginStudent,
   showPrograms,
   getCoursesFromDatabase,
   addCourse,
@@ -184,39 +185,53 @@ app.post("/register", async (req, res) => {
     });
   }
 });
-//route to login a student
+// //route to login a student
+// app.post("/login", async (req, res) => {
+//   const {
+//     username,
+//     password
+//   } = req.body;
+//   try {
+//     // Query the database to find the user with the provided username and password
+//     const result = await pool
+//       .request()
+//       .input("username", sql.NVarChar, username)
+//       .input("password", sql.NVarChar, password)
+//       .query(
+//         "SELECT * FROM students WHERE username = @username AND password = @password"
+//       );
+//     if (result.recordset.length > 0) {
+//       // Authentication successful
+//       const student = result.recordset[0];
+//       res.json({
+//         success: true,
+//         student
+//       });
+//     } else {
+//       // Authentication failed
+//       res.json({
+//         success: false
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error during login:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error"
+//     });
+//   }
+// });
 app.post("/login", async (req, res) => {
-  const {
-    username,
-    password
-  } = req.body;
-  try {
-    // Query the database to find the user with the provided username and password
-    const result = await pool
-      .request()
-      .input("username", sql.NVarChar, username)
-      .input("password", sql.NVarChar, password)
-      .query(
-        "SELECT * FROM students WHERE username = @username AND password = @password"
-      );
-    if (result.recordset.length > 0) {
-      // Authentication successful
-      const student = result.recordset[0];
+    const { username, password } = req.body;
+    const user = await loginStudent(username, password);
+  
+    if (user ?? false) {
       res.json({
         success: true,
-        student
+        user,
       });
     } else {
-      // Authentication failed
-      res.json({
-        success: false
-      });
+        res.status(400).send("success: false" );
     }
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error"
-    });
-  }
-});
+  });
+

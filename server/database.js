@@ -26,6 +26,29 @@ module.exports = {
     }
   },
 
+  // Function to login a student
+  loginStudent: async function (username, password) {
+    try {
+      const result = await pool
+        .request()
+        .input("username", sql.NVarChar, username)
+        .input("password", sql.NVarChar, password)
+        .query(`
+          SELECT * FROM student
+          WHERE username = @username AND password = @password
+        `);
+
+      if (result.rowsAffected[0] === 1) {
+      delete result.recordset[0].password;
+      console.log("Student logged in successfully:", result);
+      return result.recordset;
+      }
+    } catch (err) {
+      console.error("Error logging in student:", err);
+    }
+  },
+
+
   // Function to show programs table
   showPrograms: async function () {
     try {

@@ -15,7 +15,7 @@ USE cr
 GO
 
  
-CREATE TABLE user (
+CREATE TABLE users (
 
     user_id						INT IDENTITY(1,1) PRIMARY KEY,
     email						VARCHAR(100) UNIQUE NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE courses (
 CREATE TABLE term_courses(
 	term_course_id				INT IDENTITY(1,1) PRIMARY KEY,
 	term_id						INT FOREIGN KEY REFERENCES term(term_id) ON DELETE CASCADE,
-	courses_id					INT FOREIGN KEY REFERENCES courses(courses_id) ON DELETE CASCADE
+	courses_id					INT FOREIGN KEY REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
 CREATE TABLE student (
@@ -71,12 +71,12 @@ CREATE TABLE student (
 
 CREATE TABLE courses_student(
 	courses_student_id			INT IDENTITY(1,1) PRIMARY KEY,
-	course_id					INT FOREIGN KEY REFERENCES courses(courses_id) ON DELETE CASCADE,
+	course_id					INT FOREIGN KEY REFERENCES courses(course_id) ON DELETE CASCADE,
 	student_id					INT FOREIGN KEY REFERENCES student(student_id) ON DELETE CASCADE
 );
  
 -- Dummy data for the 'users' table
-INSERT INTO user (email, user_firstName, user_lastName, password, admin) VALUES 
+INSERT INTO users (email, user_firstName, user_lastName, password, admin) VALUES 
 
     ('admin@example.com', 'Admin', 'User', 'password', 1),
 
@@ -85,7 +85,7 @@ INSERT INTO user (email, user_firstName, user_lastName, password, admin) VALUES
 
 
 -- Dummy data for the 'program' table
-INSERT INTO program (program_name, program_max_term, program_min_coursess_term, program_max_coursess_term) VALUES 
+INSERT INTO program (program_name, program_max_term, program_min_courses_term, program_max_courses_term) VALUES 
 ('Diploma', 4, 2, 5),
 ('Post-Diploma', 4, 2, 5),
 ('Certificate', 2, 1,1);
@@ -120,7 +120,7 @@ INSERT INTO courses (course_id, course_code, course_name, course_description, co
 SET IDENTITY_INSERT courses OFF;
 
 -- Dummy data for the 'term_courses' table
- INSERT INTO term_courses (term_id, course_id) VALUES
+ INSERT INTO term_courses (term_id, courses_id) VALUES
 (1,1),
 (1,2),
 (1,3),
@@ -139,14 +139,14 @@ SET IDENTITY_INSERT courses OFF;
 -- Dummy data for the 'student' table
 SET IDENTITY_INSERT student ON;
 INSERT INTO student (student_id, student_firstName, student_lastName, email, phone, dob, program_id, username, password) VALUES
-(1, 'Adrian', 'Zach', 'adrianzach@email.com', '111-1111111', '2000-12-10', 1, 'adrianzach', 1234),
-(2, 'Maria', 'Silva', 'mariasilva@email.com', '222-2222222', '1999-08-25', 1, 'mariasilva', 1234),
-(3, 'Carlos', 'Gomes', 'carlosgomes@email.com', '333-3333333', '2002-05-03', 2, 'carlosgomes', 1234),
-(4, 'Isabel', 'Martins', 'isabelmartins@email.com', '444-4444444', '2001-11-18', 3, 'isabelmartins', 1234);
+(1, 'Adrian', 'Zach', 'adrianzach@email.com', '111-1111111', '2000-12-10', 1, 'adrianzach', '1234'),
+(2, 'Maria', 'Silva', 'mariasilva@email.com', '222-2222222', '1999-08-25', 1, 'mariasilva', '1234'),
+(3, 'Carlos', 'Gomes', 'carlosgomes@email.com', '333-3333333', '2002-05-03', 2, 'carlosgomes', '1234'),
+(4, 'Isabel', 'Martins', 'isabelmartins@email.com', '444-4444444', '2001-11-18', 3, 'isabelmartins', '1234');
 SET IDENTITY_INSERT student OFF;
 
 -- Dummy data for the 'courses_student' table
-INSERT INTO courses_student (courses_id, student_id) VALUES
+INSERT INTO courses_student (course_id, student_id) VALUES
 (1,1),
 (2,1),
 (3,1),
