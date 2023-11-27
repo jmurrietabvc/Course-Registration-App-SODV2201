@@ -11,17 +11,15 @@ const Studentlogin = () => {
 
   const handleLogin = async () => {
     try {
-      // Make an HTTP POST request to authenticate the user
       const response = await axios.post("http://localhost:5544/login", {
         username,
         password,
       });
-
-      // Check if the authentication was successful
+  
       if (response.data.success) {
-        // Successful login, pass the student data as props
+        const studentData = response.data.user;
         navigate("/student/dashboard", {
-          state: { student: response.data.student },
+          state: { student: studentData },
         });
       } else {
         setError("Invalid username or password. Please try again.");
@@ -31,6 +29,8 @@ const Studentlogin = () => {
       setError("An error occurred during login. Please try again.");
     }
   };
+  
+  
 
   return (
     <>
@@ -38,28 +38,29 @@ const Studentlogin = () => {
       <div className="student-login-container">
         <h2>Login</h2>
         <form>
-          <div className="form-group">
-            <label htmlFor="username">Username:</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button className="login-button" type="button" onClick={handleLogin}>
-            Log In
-          </button>
-        </form>
+  <div className="form-group">
+    <label htmlFor="username">Username:</label>
+    <input
+      type="text"
+      id="username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+    />
+  </div>
+  <div className="form-group">
+    <label htmlFor="password">Password:</label>
+    <input
+      type="password"
+      id="password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+  </div>
+  <button className="login-button" type="button" onClick={handleLogin}>
+    Log In
+  </button>
+</form>
+
         {error && <p className="error">{error}</p>}
         <p>
           Don't have an account?{" "}

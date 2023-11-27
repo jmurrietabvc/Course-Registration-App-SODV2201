@@ -10,7 +10,7 @@ const CourseRegistration = ({ programType }) => {
     Certificate: ["Term1"],
     "Post Diploma": ["Term1", "Term2"],
     Diploma: ["Term1", "Term2", "Term3", "Term4"],
-  }[programType];
+  }[programType] || [];
 
   const courseData = {
     Term1: [
@@ -81,8 +81,6 @@ const CourseRegistration = ({ programType }) => {
       (selectedCourse) => selectedCourse.id !== course.id
     );
     setSelectedCourses(updatedSelectedCourses);
-
-    // Save the updated selected courses in localStorage
     localStorage.setItem(
       COURSES_STORAGE_KEY,
       JSON.stringify(updatedSelectedCourses)
@@ -97,16 +95,12 @@ const CourseRegistration = ({ programType }) => {
         value={selectedTerm}
         onChange={(e) => setSelectedTerm(e.target.value)}
       >
-        {terms.map((term) => (
+        {terms && terms.map((term) => (
           <option key={term} value={term}>
             {term}
           </option>
         ))}
       </select>
-      {/* <SelectedCourses
-        selectedCourses={selectedCourses}
-        handleCourseDeselect={handleCourseDeselect}
-      /> */}
       <CourseSearch />
       <h3>Select Courses for {selectedTerm}</h3>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -126,15 +120,6 @@ const CourseRegistration = ({ programType }) => {
           </li>
         ))}
       </ul>
-      {/* <h3>Selected Courses</h3>
-      <ul>  
-        {selectedCourses.map((course) => (
-          <li key={course.id}>
-            {course.name} (Code: {course.code})
-            <button onClick={() => handleCourseDeselect(course)}>Deselect</button>
-          </li>
-        ))}
-      </ul> */}
       <h3>My Courses</h3>
       <ul>
         {selectedCourses.map((course) => (
