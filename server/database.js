@@ -32,27 +32,25 @@ module.exports = {
       const result = await pool
         .request()
         .input("username", sql.NVarChar, username)
-        .input("password", sql.NVarChar, password)
-        .query(`
+        .input("password", sql.NVarChar, password).query(`
           SELECT * FROM student
           WHERE username = @username AND password = @password
         `);
 
       if (result.rowsAffected[0] === 1) {
-      delete result.recordset[0].password;
-      console.log("Student logged in successfully:", result);
-      return result.recordset;
+        delete result.recordset[0].password;
+        console.log("Student logged in successfully:", result);
+        return result.recordset;
       }
     } catch (err) {
       console.error("Error logging in student:", err);
     }
   },
 
-
   // Function to show programs table
   showPrograms: async function () {
     try {
-      const result = await pool.request().query("SELECT * FROM programs");
+      const result = await pool.request().query("SELECT * FROM program");
       console.log(result.recordset);
       return result.recordset;
     } catch (err) {
@@ -89,113 +87,106 @@ module.exports = {
   },
 
   // Function to fetch courses from the database
-getCoursesFromDatabase: async function () {
-  try {
-    const result = await pool.request().query("SELECT * FROM courses");
-    return result.recordset;
-  } catch (error) {
-    console.error("Error fetching courses from MSSQL database:", error);
-    throw error;
-  }
-},
- 
+  getCoursesFromDatabase: async function () {
+    try {
+      const result = await pool.request().query("SELECT * FROM courses");
+      return result.recordset;
+    } catch (error) {
+      console.error("Error fetching courses from MSSQL database:", error);
+      throw error;
+    }
+  },
 
- // Function to update a course
-updateCourse: async function (courseId, course) {
-  try {
+  // Function to update a course
+  updateCourse: async function (courseId, course) {
+    try {
+      console.log("Updating course with the following data:");
+      console.log("courseCode:", course.courseCode);
+      console.log("courseName:", course.courseName);
+      console.log("courseDescription:", course.courseDescription);
+      console.log("courseFees:", course.courseFees);
+      console.log("courseId:", courseId);
 
-    console.log('Updating course with the following data:');
-    console.log('courseCode:', course.courseCode);
-    console.log('courseName:', course.courseName);
-    console.log('courseDescription:', course.courseDescription);
-    console.log('courseFees:', course.courseFees);
-    console.log('courseId:', courseId);
+      const result = await pool
 
-    const result = await pool
-    
-      .request()
-      .input("courseCode", sql.NVarChar, course.courseCode)
-      .input("courseName", sql.NVarChar, course.courseName)
-      .input("courseDescription", sql.NVarChar, course.courseDescription)
-      .input("courseFees", sql.Int, course.courseFees)
-      .input("courseId", sql.Int, courseId)
-      .query(`
+        .request()
+        .input("courseCode", sql.NVarChar, course.courseCode)
+        .input("courseName", sql.NVarChar, course.courseName)
+        .input("courseDescription", sql.NVarChar, course.courseDescription)
+        .input("courseFees", sql.Int, course.courseFees)
+        .input("courseId", sql.Int, courseId).query(`
         UPDATE courses
         SET course_code = @courseCode, course_name = @courseName, course_description = @courseDescription, course_fees = @courseFees
         WHERE course_id = @courseId
       `);
 
-    console.log("Course updated successfully:", result);
-  } catch (err) {
-    console.error("Error updating course:", err);
-    throw err;
-  }
-},
+      console.log("Course updated successfully:", result);
+    } catch (err) {
+      console.error("Error updating course:", err);
+      throw err;
+    }
+  },
 
-
-// Function to add a new course
-addCourse: async function (course) {
-  try {
-    // Use the nextCourseId when inserting the new course
-    const result = await pool
-      .request()
-      .input("courseCode", sql.VarChar(100), course.courseCode)
-      .input("courseName", sql.VarChar(100), course.courseName)
-      .input("courseDescription", sql.VarChar(5000), course.courseDescription)
-      .input("courseFees", sql.Money, course.courseFees)
-      .query(`
+  // Function to add a new course
+  addCourse: async function (course) {
+    try {
+      // Use the nextCourseId when inserting the new course
+      const result = await pool
+        .request()
+        .input("courseCode", sql.VarChar(100), course.courseCode)
+        .input("courseName", sql.VarChar(100), course.courseName)
+        .input("courseDescription", sql.VarChar(5000), course.courseDescription)
+        .input("courseFees", sql.Money, course.courseFees).query(`
         INSERT INTO courses (course_code, course_name, course_description, course_fees)
         VALUES (@courseCode, @courseName, @courseDescription, @courseFees)
       `);
 
-    console.log("Course added successfully:", result);
-  } catch (err) {
-    console.error("Error adding course:", err);
-    throw err;
-  }
-},
+      console.log("Course added successfully:", result);
+    } catch (err) {
+      console.error("Error adding course:", err);
+      throw err;
+    }
+  },
 
+  // Function to delete a course
+  deleteCourse: async function (courseId) {
+    try {
+      const result = await pool
+        .request()
+        .input("courseId", sql.Int, courseId)
+        .query("DELETE FROM courses WHERE course_id = @courseId");
 
-    // Function to delete a course
-    deleteCourse: async function (courseId) {
-      try {
-        const result = await pool
-          .request()
-          .input("courseId", sql.Int, courseId)
-          .query("DELETE FROM courses WHERE course_id = @courseId");
-  
-        console.log("Course deleted successfully:", result);
-      } catch (err) {
-        console.error("Error deleting course:", err);
-        throw err;
-      }
-    },
+      console.log("Course deleted successfully:", result);
+    } catch (err) {
+      console.error("Error deleting course:", err);
+      throw err;
+    }
+  },
 
-// Function to register a student in the database
-async registerStudent(student) {
-  try {
-    const result = await pool
-      .request()
-      .input("firstName", sql.NVarChar, student.firstName)
-      .input("lastName", sql.NVarChar, student.lastName)
-      .input("email", sql.NVarChar, student.email)
-      .input("phone", sql.NVarChar, student.phone)
-      .input("dob", sql.Date, new Date(student.dob))
-      .input("program", sql.NVarChar, student.program)
-      .input("username", sql.NVarChar, student.username)
-      .input("password", sql.NVarChar, student.password).query(`
-        INSERT INTO students
-        (firstName, lastName, email, phone, dob, department, program, username, password)
-        VALUES
-        (@firstName, @lastName, @email, @phone, @dob, 'SD Department', @program, @username, @password)
-      `);
+  // Function to register a student in the database
+  async registerStudent(student) {
+    try {
+      const result = await pool
+        .request()
+        .input("student_firstName", sql.NVarChar, student.student_firstName)
+        .input("student_lastName", sql.NVarChar, student.student_lastName)
+        .input("email", sql.NVarChar, student.email)
+        .input("phone", sql.NVarChar, student.phone)
+        .input("dob", sql.Date, new Date(student.dob))
+        .input("program_id", sql.Int, student.program_id)
+        .input("username", sql.NVarChar, student.username)
+        .input("password", sql.NVarChar, student.password).query(`
+      INSERT INTO student
+      (student_firstName, student_lastName, email, phone, dob, department, program_id, username, password)
+      VALUES
+      (@student_firstName, @student_lastName, @email, @phone, @dob, 'SD Department', @program_id, @username, @password)
+    `);
       console.log("Student registered successfully:", result);
     } catch (err) {
       console.error("Error registering student:", err);
       throw err;
     }
   },
-
 
   // Function to export the pool object
   getPool: () => pool,

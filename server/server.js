@@ -13,6 +13,7 @@ const {
   addCourse,
   updateCourse,
   deleteCourse,
+  registerStudent,
   getPool,
 } = require("./database");
 
@@ -163,24 +164,24 @@ app.listen(port, () => {
 //route to register a student
 app.post("/register", async (req, res) => {
   const {
-    firstName,
-    lastName,
+    student_firstName,
+    student_lastName,
     email,
     phone,
     dob,
-    program,
+    program_id,
     username,
     password,
   } = req.body;
   try {
     // Call a function to register the student in the database
     await registerStudent({
-      firstName,
-      lastName,
+      student_firstName,
+      student_lastName,
       email,
       phone,
       dob,
-      program,
+      program_id,
       username,
       password,
     });
@@ -194,12 +195,23 @@ app.post("/register", async (req, res) => {
     });
   }
 });
+
+// Endpoint to get all programs
+app.get("/programs", async (req, res) => {
+  try {
+    const programs = await showPrograms();
+    res.json(programs);
+  } catch (error) {
+    console.error("Error getting programs:", error);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
+
 // //route to login a student
 // app.post("/login", async (req, res) => {
-//   const {
-//     username,
-//     password
-//   } = req.body;
+//   const { username, password } = req.body;
 //   try {
 //     // Query the database to find the user with the provided username and password
 //     const result = await pool
@@ -214,22 +226,23 @@ app.post("/register", async (req, res) => {
 //       const student = result.recordset[0];
 //       res.json({
 //         success: true,
-//         student
+//         student,
 //       });
 //     } else {
 //       // Authentication failed
 //       res.json({
-//         success: false
+//         success: false,
 //       });
 //     }
 //   } catch (error) {
 //     console.error("Error during login:", error);
 //     res.status(500).json({
 //       success: false,
-//       message: "Internal server error"
+//       message: "Internal server error",
 //     });
 //   }
 // });
+
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await loginStudent(username, password);

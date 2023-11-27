@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/StudentForm.css"; // Import the CSS file
 import axios from "axios";
@@ -6,41 +6,66 @@ import axios from "axios";
 function Signup() {
   const navigate = useNavigate();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [student_firstName, setFirstName] = useState("");
+  const [student_lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
-  const [program, setProgram] = useState("Diploma");
+  const [programs, setPrograms] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [selectedProgram, setSelectedProgram] = useState({
+    program_id: "", // Initialize program_id as an empty string
+    program_name: "",
+  });
+
+  useEffect(() => {
+    // Fetch program names when the component mounts
+    const fetchPrograms = async () => {
+      try {
+        const response = await axios.get("http://localhost:5544/programs");
+        console.log("Programs response:", response.data);
+        setPrograms(response.data);
+      } catch (error) {
+        console.error("Error fetching programs:", error);
+      }
+    };
+
+    fetchPrograms();
+  }, []);
+
   const handleSignup = async () => {
     try {
+      // Ensure a program is selected before proceeding
+      if (!selectedProgram.program_id) {
+        console.error("No program selected");
+        // Handle the error appropriately
+        return;
+      }
+
       // Create a student object
       const student = {
-        //id: studentId,
-        student_firstName: firstName, // Corrected field name
-        student_lastName: lastName,   // Corrected field name
+        student_firstName,
+        student_lastName,
         email,
         phone,
         dob,
-        //department: "SD Department",
-        program,
+        program_name: selectedProgram.program_name,
+        program_id: selectedProgram.program_id,
         username,
         password,
       };
-  
+
       // Make an HTTP POST request to the server to register the student
       await axios.post("http://localhost:5544/register", student);
-  
+
       navigate("/student/login");
     } catch (error) {
       console.error("Error registering student:", error);
       // Handle error appropriately (e.g., display an error message to the user)
     }
   };
-  
 
   return (
     <>
@@ -54,7 +79,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="First Name"
-                value={firstName}
+                value={student_firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="form-input"
               />
@@ -66,7 +91,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="Last Name"
-                value={lastName}
+                value={student_lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="form-input"
               />
@@ -112,13 +137,24 @@ function Signup() {
             <label>Program:</label>
             <div className="form-input-container">
               <select
-                value={program}
-                onChange={(e) => setProgram(e.target.value)}
+                value={selectedProgram.program_id}
+                onChange={(e) =>
+                  setSelectedProgram({
+                    program_id: e.target.value,
+                    program_name: e.target.options[e.target.selectedIndex].text,
+                  })
+                }
                 className="form-input"
               >
-                <option value="Diploma">Diploma</option>
-                <option value="Post Diploma">Post Diploma</option>
-                <option value="Certificate">Certificate</option>
+                <option value="" disabled>
+                  Select a program
+                </option>
+                {Array.isArray(programs) &&
+                  programs.map((program) => (
+                    <option key={program.program_id} value={program.program_id}>
+                      {program.program_name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>

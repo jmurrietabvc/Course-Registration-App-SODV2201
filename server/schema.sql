@@ -64,6 +64,7 @@ CREATE TABLE student (
     email						VARCHAR(100) UNIQUE NOT NULL,
     phone						VARCHAR(20) NOT NULL,
     dob							DATE NOT NULL,
+	department					VARCHAR(100) NOT NULL,
     program_id					INT FOREIGN KEY REFERENCES program(program_id) ON DELETE CASCADE,
     username					VARCHAR(50) UNIQUE NOT NULL,
     password					VARCHAR(50) NOT NULL
