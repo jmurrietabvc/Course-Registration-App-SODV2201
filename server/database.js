@@ -26,26 +26,7 @@ module.exports = {
     }
   },
 
-  // Function to login a student
-  loginStudent: async function (username, password) {
-    try {
-      const result = await pool
-        .request()
-        .input("username", sql.NVarChar, username)
-        .input("password", sql.NVarChar, password).query(`
-          SELECT * FROM student
-          WHERE username = @username AND password = @password
-        `);
 
-      if (result.rowsAffected[0] === 1) {
-        delete result.recordset[0].password;
-        console.log("Student logged in successfully:", result);
-        return result.recordset;
-      }
-    } catch (err) {
-      console.error("Error logging in student:", err);
-    }
-  },
 
   // Function to show programs table
   showPrograms: async function () {
@@ -173,13 +154,14 @@ module.exports = {
         .input("email", sql.NVarChar, student.email)
         .input("phone", sql.NVarChar, student.phone)
         .input("dob", sql.Date, new Date(student.dob))
+        .input("department", sql.NVarChar, student.department) // Added department input
         .input("program_id", sql.Int, student.program_id)
         .input("username", sql.NVarChar, student.username)
         .input("password", sql.NVarChar, student.password).query(`
       INSERT INTO student
       (student_firstName, student_lastName, email, phone, dob, department, program_id, username, password)
       VALUES
-      (@student_firstName, @student_lastName, @email, @phone, @dob, 'SD Department', @program_id, @username, @password)
+      (@student_firstName, @student_lastName, @email, @phone, @dob, @department, @program_id, @username, @password)
     `);
       console.log("Student registered successfully:", result);
     } catch (err) {
@@ -187,6 +169,55 @@ module.exports = {
       throw err;
     }
   },
+  
+  // Function to login a student
+  loginStudent: async function (username, password) {
+    try {
+      const result = await pool
+        .request()
+        .input("username", sql.NVarChar, username)
+        .input("password", sql.NVarChar, password)
+        .query(`
+          SELECT * FROM student
+          WHERE username = @username AND password = @password
+        `);
+  
+      if (result.rowsAffected[0] === 1) {
+        const user = result.recordset[0];
+        // Omit the password from the returned user object
+        const { password, ...userWithoutPassword } = user;
+        console.log("Student logged in successfully:", userWithoutPassword);
+        return userWithoutPassword;
+      }
+    } catch (err) {
+      console.error("Error logging in student:", err);
+    }
+  },
+  getDetailedStudent: async function (username) {
+    try {
+      const result = await pool
+        .request()
+        .input("username", sql.NVarChar, username)
+        .query(`
+          SELECT * FROM student
+          WHERE username = @username
+        `);
+
+      if (result.rowsAffected[0] === 1) {
+        delete result.recordset[0].password;
+        console.log("Detailed student information retrieved successfully:", result);
+        return result.recordset[0];
+      } else {
+        console.log("Error fetching detailed student information. Student not found.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Reason why is not working", error);
+      
+    }
+  },
+
+
 
   // Function to export the pool object
   getPool: () => pool,

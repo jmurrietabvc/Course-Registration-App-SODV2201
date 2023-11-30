@@ -14,6 +14,7 @@ const {
   updateCourse,
   deleteCourse,
   registerStudent,
+  getDetailedStudent,
   getPool,
 } = require("./database");
 
@@ -156,9 +157,6 @@ app.delete("/courses/:id", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
 
 //Student
 //route to register a student
@@ -169,6 +167,7 @@ app.post("/register", async (req, res) => {
     email,
     phone,
     dob,
+    department,
     program_id,
     username,
     password,
@@ -181,6 +180,7 @@ app.post("/register", async (req, res) => {
       email,
       phone,
       dob,
+      department,
       program_id,
       username,
       password,
@@ -256,3 +256,45 @@ app.post("/login", async (req, res) => {
     res.status(400).send("success: false");
   }
 });
+
+// Endpoint to get detailed student information
+app.post("/loggedstudent", async (req, res) => {
+  const { username } = req.body;
+
+  console.log(`Received request for detailed student information. Username: ${username}`);
+
+  try {
+    const detailedStudent = await getDetailedStudent(username);
+
+    if (detailedStudent) {
+      // Format the date of birth to a readable string
+      detailedStudent.dob = detailedStudent.dob.toLocaleDateString();
+
+      console.log("Fetched detailed student information:", detailedStudent);
+      res.json({
+        success: true,
+        detailedStudent,
+      });
+    } else {
+      console.log("Error fetching detailed student information. Student not found.");
+      res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching detailed student information:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
+
+
+

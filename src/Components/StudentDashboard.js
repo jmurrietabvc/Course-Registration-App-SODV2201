@@ -12,31 +12,34 @@ export const Studentdashboard = () => {
 
   const [student, setStudent] = useState(initialStudent);
 
-  // Update the useEffect block in your Studentdashboard.js file
+
+
 useEffect(() => {
+  console.log("Username for request:", initialStudent.username); // Add this line
 
-const fetchStudent = async () => {
-  try {
-    const response = await axios.post("http://localhost:5544/loggedstudent", {
-      username: initialStudent.username,
-      password: initialStudent.password,
-    });
+  const fetchStudent = async () => {
+    try {
+      const response = await axios.post("http://localhost:5544/loggedstudent", {
+        username: initialStudent.username,
+      });
 
-    const { success, detailedStudent } = response.data;
+      const { success, detailedStudent } = response.data;
 
-    if (success) {
-      setStudent(detailedStudent);
-    } else {
-      console.error("Error fetching student information");
+      if (success) {
+        setStudent(detailedStudent);
+      } else {
+        console.error("Error fetching student information");
+      }
+    } catch (error) {
+      console.error("Error fetching student information", error);
     }
-  } catch (error) {
-    console.error("Error fetching student information", error);
-  }
-};
-
+  };
 
   fetchStudent();
 }, [initialStudent]);
+
+
+
 
 
   return (
@@ -46,8 +49,8 @@ const fetchStudent = async () => {
       <div className="profile">
         <h2>Student Profile</h2>
         <h4>
-          Name: {student.student_firstName} &emsp; ID: {student.student_id} &emsp; Email: {student.email} &emsp;
-          Phone: {student.phone} &emsp; DOB: {student.dob} &emsp; Program ID: {student.program_id} &emsp;
+          Name: {student.student_firstName} ; ID: {student.student_id} ; Email: {student.email} ;
+          Phone: {student.phone} ; DOB: {student.dob} ; Program ID: {student.program_id} ;
           Username: {student.username}
         </h4>
       </div>
