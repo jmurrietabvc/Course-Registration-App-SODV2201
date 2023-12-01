@@ -15,6 +15,9 @@ const {
   deleteCourse,
   registerStudent,
   getDetailedStudent,
+  enrollStudentInCourse,
+  withdrawStudentFromCourse,
+  getEnrolledCourses,
   getPool,
 } = require("./database");
 
@@ -290,6 +293,61 @@ app.post("/loggedstudent", async (req, res) => {
     });
   }
 });
+
+// Endpoint to enroll a student in a course
+app.post("/enroll", async (req, res) => {
+  const { studentId, courseId } = req.body;
+  try {
+    await enrollStudentInCourse(studentId, courseId);
+    res.json({
+      message: "Student enrolled in course successfully",
+    });
+  } catch (error) {
+    console.error("Error enrolling student in course:", error);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
+
+// Endpoint to withdraw a student from a course
+app.post("/withdraw", async (req, res) => {
+  const { studentId, courseId } = req.body;
+  try {
+    await withdrawStudentFromCourse(studentId, courseId);
+    res.json({
+      message: "Student withdrawn from course successfully",
+    });
+  } catch (error) {
+    console.error("Error withdrawing student from course:", error);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
+
+app.post("/enrolledcourses", async (req, res) => {
+  const { studentId } = req.body;
+
+  try {
+    const enrolledCourses = await getEnrolledCourses(studentId);
+
+    res.json({
+      success: true,
+      enrolledCourses,
+    });
+  } catch (error) {
+    console.error("Error fetching enrolled courses:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import CourseSearch from "./CourseSearch";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const CourseRegistration = ({ programType }) => {
-  const [selectedTerm, setSelectedTerm] = useState("Term1");
+const CourseRegistration = ({ programType, studentId, updateStudent }) => {
+  const [selectedTerm, setSelectedTerm] = useState("your Program");
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [courseData, setCourseData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 5; // You can adjust the number of courses per page
 
   const terms = {
     Certificate: ["Term1"],
@@ -12,119 +16,138 @@ const CourseRegistration = ({ programType }) => {
     Diploma: ["Term1", "Term2", "Term3", "Term4"],
   }[programType] || [];
 
-  const courseData = {
-    Term1: [
-      { id: 1, name: "Project management1", code: "Pr111" },
-      { id: 2, name: "C++ Programming Fundamentals", code: "C++111" },
-      { id: 3, name: "Computer Maintenance", code: "CompM1111" },
-      { id: 4, name: "Information Security1", code: "IS1111" },
-    ],
-    Term2: [
-      { id: 5, name: "Networking", code: "Net222" },
-      { id: 6, name: "Web technology", code: "Web222" },
-      { id: 7, name: "Project Management2", code: "Pr222" },
-    ],
-    Term3: [
-      { id: 8, name: "Advanced Project management1", code: "Pr333" },
-      { id: 9, name: "Advanced C++ Programming Fundamentals", code: "C++333" },
-      { id: 10, name: "Advanced Computer Maintenance", code: "CompM333" },
-      { id: 11, name: "Advanced Information Security1", code: "IS333" },
-    ],
-    Term4: [
-      { id: 12, name: "Advanced Networking", code: "Net444" },
-      { id: 13, name: "Advanced Web technology", code: "Web444" },
-      { id: 14, name: "Advanced Project Management2", code: "Pro444" },
-    ],
-  };
-
-  const maxCoursesAllowed = {
-    Certificate: 1,
-    Diploma: { min: 2, max: 5 },
-    "Post Diploma": { min: 2, max: 5 },
-  };
-
-  const COURSES_STORAGE_KEY = "selectedCourses";
-
-  // Function to handle course selection
-  const handleCourseSelect = (course) => {
-    if (selectedCourses.length >= maxCoursesAllowed[programType]) {
-      window.alert(
-        "Error: You have reached the maximum course limit for this program."
-      );
-    } else if (
-      !selectedCourses.find((selectedCourse) => selectedCourse.id === course.id)
-    ) {
-      setSelectedCourses((prevSelectedCourses) => {
-        const updatedSelectedCourses = [...prevSelectedCourses, course];
-        // Save the updated selected courses in localStorage
-        localStorage.setItem(
-          COURSES_STORAGE_KEY,
-          JSON.stringify(updatedSelectedCourses)
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5544/courses?term=${selectedTerm}`
         );
-        return updatedSelectedCourses;
+
+        console.log("API Response:", response.data);
+
+        setCourseData(response.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setErrorMessage("Error fetching courses");
+      }
+    };
+
+    fetchCourses();
+  }, [selectedTerm]);
+
+  const enrollStudentInCourse = async (courseId) => {
+    try {
+      await axios.post("http://localhost:5544/enroll", {
+        studentId,
+        courseId,
       });
-      setErrorMessage("");
+
+      // Update the selectedCourses state
+      setSelectedCourses((prevSelectedCourses) => [
+        ...prevSelectedCourses,
+        courseData.find((course) => course.course_id === courseId),
+      ]);
+
+      // Update the student profile
+      updateStudent();
+    } catch (error) {
+      console.error("Error enrolling student in course:", error);
     }
   };
 
-  // Function to handle course deselection
-  // const handleCourseDeselect = (course) => {
-  //   setSelectedCourses(
-  //     selectedCourses.filter(
-  //       (selectedCourse) => selectedCourse.id !== course.id
-  //     )
-  //   );
-  // };
+  const withdrawStudentFromCourse = async (courseId) => {
+    try {
+      await axios.post("http://localhost:5544/withdraw", {
+        studentId,
+        courseId,
+      });
 
-  const handleCourseDeselect = (course) => {
-    const updatedSelectedCourses = selectedCourses.filter(
-      (selectedCourse) => selectedCourse.id !== course.id
-    );
-    setSelectedCourses(updatedSelectedCourses);
-    localStorage.setItem(
-      COURSES_STORAGE_KEY,
-      JSON.stringify(updatedSelectedCourses)
-    );
-    return updatedSelectedCourses;
+      // Update the selectedCourses state
+      setSelectedCourses((prevSelectedCourses) =>
+        prevSelectedCourses.filter((course) => course.course_id !== courseId)
+      );
+
+      // Update the student profile
+      updateStudent();
+    } catch (error) {
+      console.error("Error withdrawing student from course:", error);
+    }
   };
 
   return (
-    <div>
+    <div className="">
       <h2>Course Registration</h2>
-      <select
-        value={selectedTerm}
-        onChange={(e) => setSelectedTerm(e.target.value)}
-      >
-        {terms && terms.map((term) => (
-          <option key={term} value={term}>
-            {term}
-          </option>
-        ))}
-      </select>
-      <CourseSearch />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {/* <select
+          value={selectedTerm}
+          onChange={(e) => setSelectedTerm(e.target.value)}
+        >
+          {terms &&
+            terms.map((term) => (
+              <option key={term} value={term}>
+                {term}
+              </option>
+            ))}
+        </select> */}
+        
+        {/* Add the search bar */}
+        <input
+          type="text"
+          placeholder="Search courses"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       <h3>Select Courses for {selectedTerm}</h3>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      
+      {/* Modify the rendering of courses for search and pagination */}
       <ul>
-        {courseData[selectedTerm].map((course) => (
-          <li key={course.id}>
-            {course.name} (Code: {course.code})
-            {selectedCourses.find(
-              (selectedCourse) => selectedCourse.id === course.id
-            ) ? (
-              <button onClick={() => handleCourseDeselect(course)}>
-                Deselect
-              </button>
-            ) : (
-              <button onClick={() => handleCourseSelect(course)}>Select</button>
-            )}
-          </li>
-        ))}
+        {courseData
+          .filter((course) =>
+            course.course_name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage)
+          .map((course) => (
+            <li key={course.course_id}>
+              {course.course_name} (Code: {course.course_code})
+              {selectedCourses.find(
+                (selectedCourse) =>
+                  selectedCourse.course_id === course.course_id
+              ) ? (
+                <button onClick={() => withdrawStudentFromCourse(course.course_id)}>
+                  Withdraw
+                </button>
+              ) : (
+                <button onClick={() => enrollStudentInCourse(course.course_id)}>
+                  Enroll
+                </button>
+              )}
+            </li>
+          ))}
       </ul>
-      <h3>My Courses</h3>
+      
+      {/* Add pagination controls */}
+      <div>
+        <button onClick={() => setCurrentPage((prev) => prev - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span> Page {currentPage} </span>
+        <button
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          disabled={currentPage * coursesPerPage >= courseData.length}
+        >
+          Next
+        </button>
+      </div>
+
+      <h3>Selected Courses</h3>
+      <br />
       <ul>
         {selectedCourses.map((course) => (
-          <li key={course.id}>
-            {course.name} (Code: {course.code})
+          <li key={course.course_id}>
+            {course.course_name} (Code: {course.course_code})
           </li>
         ))}
       </ul>

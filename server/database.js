@@ -217,6 +217,62 @@ module.exports = {
     }
   },
 
+// Function to enroll a student in a course
+ enrollStudentInCourse: async function(studentId, courseId) {
+  try {
+    const result = await pool
+      .request()
+      .input("studentId", sql.Int, studentId)
+      .input("courseId", sql.Int, courseId)
+      .query(`
+        INSERT INTO courses_student (student_id, course_id)
+        VALUES (@studentId, @courseId)
+      `);
+    console.log("Student enrolled in course successfully:", result);
+  } catch (err) {
+    console.error("Error enrolling student in course:", err);
+    throw err;
+  }
+},
+
+// Function to withdraw a student from a course
+withdrawStudentFromCourse: async function(studentId, courseId) {
+  try {
+    const result = await pool
+      .request()
+      .input("studentId", sql.Int, studentId)
+      .input("courseId", sql.Int, courseId)
+      .query(`
+        DELETE FROM courses_student
+        WHERE student_id = @studentId AND course_id = @courseId
+      `);
+    console.log("Student withdrawn from course successfully:", result);
+  } catch (err) {
+    console.error("Error withdrawing student from course:", err);
+    throw err;
+  }
+},
+
+// Function to get enrolled courses for a student
+getEnrolledCourses: async function (studentId) {
+  try {
+    const result = await pool
+      .request()
+      .input("studentId", sql.Int, studentId)
+      .query(`
+        SELECT courses.*
+        FROM courses
+        JOIN courses_student ON courses.course_id = courses_student.course_id
+        WHERE courses_student.student_id = @studentId
+      `);
+
+    const enrolledCourses = result.recordset;
+    return enrolledCourses;
+  } catch (error) {
+    console.error("Error fetching enrolled courses:", error);
+    throw error;
+  }
+},
 
 
   // Function to export the pool object

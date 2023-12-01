@@ -57,6 +57,19 @@ function Signup() {
         password,
       };
 
+       // Assign the 'department' value based on the selected program's name
+    if (selectedProgram.program_name === 'Diploma') {
+      student.department = 'Diploma';
+    } else if (selectedProgram.program_name === 'Post-Diploma') {
+      student.department = 'Post-Diploma';
+    } else if (selectedProgram.program_name === 'Certificate') {
+      student.department = 'Certificate';
+    } else {
+      console.error("Invalid program name");
+      // Handle the error appropriately
+      return;
+    }
+
       // Make an HTTP POST request to the server to register the student
       await axios.post("http://localhost:5544/register", student);
 

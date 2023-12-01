@@ -1,0 +1,29 @@
+/* StudentDashboard.css */
+
+.profile {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-info {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    text-align: left;
+      padding: 20px;
+      max-width: 500px;
+  }
+  
+  .label {
+    font-weight: bold;
+    width: 100px;
+    display:inline-flexbox;
+    
+  }
+  
+  .profile-info p {
+    margin: 10px 0;
+  }
+  
+
