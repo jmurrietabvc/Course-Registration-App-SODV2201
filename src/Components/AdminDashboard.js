@@ -172,19 +172,19 @@ const searchCourses = () => {
   </tr>
 </thead>
 <tbody>
-  {currentCourses.map((course) => (
+  {currentCourses.map((course) =>(
     <tr key={course.course_id}>
       <td>{course.course_name}</td>
       <td>{course.course_code}</td>
       <td>{course.course_description}</td>
-      <td>{course.course_fees}</td> {/* Display Course Fees */}
+      <td>{`CAD ${course.course_fees}`}</td>
       <td>
-        <button className="admin-dashboard-button" onClick={() => editCourse(course.course_id)}>
+        <button className="admin-dashboard-button"onClick={()=>editCourse(course.course_id)}>
           Edit
         </button>
       </td>
       <td>
-        <button className="admin-dashboard-button" onClick={() => deleteCourse(course.course_id)}>
+        <button className="admin-dashboard-button"onClick={()=>deleteCourse(course.course_id)}>
           Delete
         </button>
       </td>

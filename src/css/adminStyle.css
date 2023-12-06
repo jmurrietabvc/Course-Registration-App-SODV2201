@@ -102,3 +102,7 @@ h3 {
 .page-link:hover {
   background-color: #ddd;
 }
+
+.admin-logout-btn{
+  background-color: red;
+}
