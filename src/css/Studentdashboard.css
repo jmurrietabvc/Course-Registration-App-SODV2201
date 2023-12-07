@@ -1,29 +1,46 @@
 /* StudentDashboard.css */
 
 .profile {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .profile-info {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f7f7f7;
-    text-align: left;
-      padding: 20px;
-      max-width: 500px;
-  }
-  
-  .label {
-    font-weight: bold;
-    width: 100px;
-    display:inline-flexbox;
-    
-  }
-  
-  .profile-info p {
-    margin: 10px 0;
-  }
-  
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
+.profile-info {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f7f7f7;
+  text-align: left;
+  padding: 20px;
+  max-width: 500px;
+}
+
+.label {
+  font-weight: bold;
+  width: 100px;
+  display: inline-flexbox;
+}
+
+.profile-info p {
+  margin: 10px 0;
+}
+
+table {
+  width: 100%;
+  border-spacing: 5px;
+}
+
+thead {
+  background-color: #213159;
+  padding: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+td {
+  background-color: #ececec;
+  padding: 10px 5px 10px 5px;
+  border-radius: 5px;
+  color: #213159;
+  text-align: center;
+}
